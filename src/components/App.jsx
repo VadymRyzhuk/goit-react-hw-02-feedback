@@ -1,4 +1,7 @@
 import { Component } from 'react';
+import { Statistics } from './Statistics/Statistics';
+import { FeedbackOptions } from './FeedbackOptions/FeedbackOptions';
+import { Section } from './Section/Section';
 
 export class App extends Component {
   state = {
@@ -6,15 +9,11 @@ export class App extends Component {
     neutral: 0,
     bad: 0,
   };
-  onGoodClick = () => {
-    this.setState({ good: this.state.good + 1 });
+
+  onLeaveFeedback = option => {
+    this.setState({ [option]: this.state[option] + 1 });
   };
-  onNeutralClick = () => {
-    this.setState({ neutral: this.state.neutral + 1 });
-  };
-  onBadClick = () => {
-    this.setState({ bad: this.state.bad + 1 });
-  };
+
   countTotalFeedback = () => {
     return this.state.good + this.state.neutral + this.state.bad;
   };
@@ -27,50 +26,26 @@ export class App extends Component {
   };
 
   render() {
+    const options = Object.keys(this.state);
     return (
       <>
-        <p>Please leave feedback</p>
-        <div>
-          <button onClick={this.onGoodClick}>Good</button>
-          <button onClick={this.onNeutralClick}>Neutral</button>
-          <button onClick={this.onBadClick}>Bad</button>
-        </div>
-        <p>Statistics</p>
-        <span>Good: {this.state.good}</span>
-        <br />
-        <span>Neutral: {this.state.neutral}</span>
-        <br />
-        <span>Bad: {this.state.bad}</span> <br />
-        <span>
-          Total: <span>{this.countTotalFeedback()}</span>
-        </span>
-        <br />
-        <span>
-          Positive percentage:
-          <span>
-            Positive percentage:
-            <span>
-              {isNaN(this.countPositiveFeedbackPercentage())
-                ? 0
-                : `${this.countPositiveFeedbackPercentage()}%`}
-            </span>
-          </span>
-        </span>
-        <br />
+        <Section title="Please leave feedback">
+          <FeedbackOptions
+            options={options}
+            onLeaveFeedback={this.onLeaveFeedback}
+          />
+        </Section>
+
+        <Section title="Statistics">
+          <Statistics
+            good={this.state.good}
+            neutral={this.state.neutral}
+            bad={this.state.bad}
+            total={this.countTotalFeedback()}
+            positivePercentage={this.countPositiveFeedbackPercentage()}
+          />
+        </Section>
       </>
     );
   }
 }
-
-// <div
-//   style={{
-//     height: '100vh',
-//     display: 'flex',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     fontSize: 40,
-//     color: '#010101',
-//   }}
-// >
-//   React homework template
-// </div>;
